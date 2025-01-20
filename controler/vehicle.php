@@ -52,7 +52,7 @@ require "/xampp/htdocs/app1/model/vehicleManager.php";
                         <h4>Rechercher un Véhicule par Immatriculation</h4>
                     </div>
                     <div class="card-body">
-                        <form action="vehicle_find_by_plate.php" method="get">
+                        <form action="vehicle_find_by_plates.php" method="get">
                             <div class="form-group">
                                 <label for="licence_plate">Immatriculation</label>
                                 <input type="text" name="licence_plate" id="licence_plate" class="form-control" placeholder="Entrez l'immatriculation du véhicule" required>

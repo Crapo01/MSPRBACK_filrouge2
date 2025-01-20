@@ -28,7 +28,7 @@ class VehicleManager {
     $query = $this->db->query(
       "SELECT * 
         FROM Vehicle
-        WHERE licence_plate LIKE %$p%
+        WHERE licence_plate LIKE '%$p%'
     " 
     );
     
@@ -44,7 +44,7 @@ class VehicleManager {
       $this->db->beginTransaction();
         $query = $this->db->prepare(
         "INSERT INTO vehicle(`licence_plate`, `informations`, `km`)
-        VALUES(:plate, :info, :address, :km)"
+        VALUES(:plate, :info, :km)"
       );
 
       $result = $query->execute([
@@ -58,6 +58,7 @@ class VehicleManager {
     }
     catch (\Exception $e){
       $this->db->rollBack();
+      echo $e;
       }
   }
 
@@ -86,6 +87,7 @@ class VehicleManager {
     }
     catch (\Exception $e){
       $this->db->rollBack();
+      echo $e;
       }
   }
 
