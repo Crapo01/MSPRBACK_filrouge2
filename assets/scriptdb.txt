@@ -1,0 +1,35 @@
+CREATE TABLE Customer (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Identifiant unique (clé primaire) avec auto-incrémentation
+    first_name CHAR(255),               -- Nom du client
+    second_name CHAR(255),              -- Prénom du client
+    address CHAR(255),                  -- Adresse complète
+    permit_number CHAR(255)             -- Numéro de permis
+);
+
+CREATE TABLE Vehicle (
+    id INT AUTO_INCREMENT PRIMARY KEY,      -- Identifiant unique (clé primaire) avec auto-incrémentation
+    licence_plate CHAR(255) NOT NULL,       -- Immatriculation du véhicule (non null)
+    informations TEXT,                      -- Notes sur le véhicule (par exemple dégradations)
+    km INT NOT NULL                         -- Kilométrage du véhicule (non null)
+);
+
+CREATE TABLE Contract (
+    id INT AUTO_INCREMENT PRIMARY KEY,               -- Clé unique du contrat (auto-incrémentée)
+    vehicle_id int NOT NULL,                    -- ID du véhicule associé au contrat
+    customer_id int NOT NULL,                   -- ID du client associé au contrat
+    sign_datetime DATETIME NOT NULL,                  -- Date et heure de signature du contrat
+    loc_begin_datetime DATETIME NOT NULL,             -- Date et heure de début de la location
+    loc_end_datetime DATETIME NOT NULL,               -- Date et heure de fin de la location
+    returning_datetime DATETIME,                      -- Date et heure de rendu du véhicule
+    price FLOAT NOT NULL,                             -- Prix facturé pour le contrat
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicle(id), -- Clé étrangère référencée sur la table Vehicle
+    FOREIGN KEY (customer_id) REFERENCES Customer(id) -- Clé étrangère référencée sur la table Customer
+);
+
+CREATE TABLE Billing (
+    ID INT AUTO_INCREMENT PRIMARY KEY,           -- Clé unique du paiement (auto-incrémentée)
+    Contract_id INT NOT NULL,                     -- ID du contrat associé au paiement (clé étrangère vers la table Contract)
+    Amount FLOAT NOT NULL,                        -- Montant payé
+    FOREIGN KEY (Contract_id) REFERENCES Contract(id)  -- Clé étrangère référencée sur la table Contract
+);
+
