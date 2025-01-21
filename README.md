@@ -98,5 +98,23 @@ Save and close the php.ini file.
     }
     ?>
 
+## Environment variables
+
+create and update .htaccess file for environment variables:
+
+
+
+    SetEnv DB_HOST mysqlDbUrl
+    SetEnv DB_USER mysqlUserName
+    SetEnv DB_PASSWORD mysqlPassword
+    SetEnv DB_DBNAME mysqlDbName
+
+    SetEnv MDB_HOST mongodbDbUrl
+    SetEnv MDB_USER mongodbUserName
+    SetEnv MDB_PASSWORD mongodbPassword
+    SetEnv MDB_DBNAME mongodbDbName
+
+
+
 
 
