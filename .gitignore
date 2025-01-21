@@ -3,7 +3,5 @@
 # PHP 
 
 
-/config/*
+.htaccess
 
-
-/vendor/
