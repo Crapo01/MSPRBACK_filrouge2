@@ -1,6 +1,6 @@
 <?php
 //header( 'Content-Type: application/json' );
-require_once'../model/db_mysql.php';
+require_once'../../model/db_mysql.php';
 $db = new Database();
 
 $pdo = $db->getDbConnect();
@@ -51,60 +51,72 @@ function handleGet( $pdo ) {
 }
 
 function handlePost( $pdo, $input ) {
-    if ( empty( $input[ 'contract_id' ] ) || empty( $input[ 'amount' ] ) ) {
-        echo json_encode( [ 'message' => 'A field is missing' ] );
+    if ( empty( $input['contract_id'] ) || empty( $input['amount'] ) ) {
+        echo json_encode([ 'message' => 'A field is missing' ]);
         die();
     }
+
+    if ( !is_numeric( $input['contract_id'] ) ) {
+        echo json_encode([ 'message' => 'Invalid contract_id format' ]);
+        die();
+    }
+
+    if ( !is_numeric( $input['amount'] ) || floatval( $input['amount'] ) <= 0 ) {
+        echo json_encode([ 'message' => 'Invalid amount value. It must be a positive number' ]);
+        die();
+    }
+
+    $contract_id = htmlspecialchars( $input['contract_id'] );
+    $amount = htmlspecialchars( $input['amount'] );
+
     try {
         $pdo->beginTransaction();
         $query = $pdo->prepare(
             "INSERT INTO billing (`contract_id`, `amount`)
-          VALUES(:contract_id, :amount)"
+            VALUES(:contract_id, :amount)"
         );
-
-        $query->execute( [
-            'contract_id' => htmlspecialchars( $input[ 'contract_id' ] ),
-            'amount' => htmlspecialchars( $input[ 'amount' ] )
-        ] );
+        $query->execute([
+            'contract_id' => $contract_id,
+            'amount' => $amount
+        ]);
         $pdo->commit();
-
-        echo json_encode( [ 'message' => 'bill created successfully' ] );
+        echo json_encode([ 'message' => 'Bill created successfully' ]);
     } catch ( \Exception $e ) {
         $pdo->rollBack();
-        echo json_encode( [ 'message' => 'An error occured',$e ] );
-
+        echo json_encode([ 'message' => 'An error occurred', 'error' => $e->getMessage() ]);
     }
-
 }
 
+
 function handlePut( $pdo, $input ) {
-    if ( empty( $input[ 'amount' ] )) {
-        echo json_encode( [ 'message' => 'A field is missing' ] );
+    if ( empty( $input['amount'] ) || !is_numeric( $input['amount'] ) || floatval( $input['amount'] ) <= 0 ) {
+        echo json_encode([ 'message' => 'Invalid or missing amount' ]);
         die();
     }
-    if ( isset( $_GET[ 'id' ] ) ) {
+    if ( isset( $_GET['id'] ) && is_numeric( $_GET['id'] ) ) {
         try {
             $pdo->beginTransaction();
             $query = $pdo->prepare(
                 "UPDATE Billing
-        SET 
-        amount = :amount
-        WHERE id = :id" );
-                $query->execute( [
-                    'id' => $_GET[ 'id' ],
-                    'amount' => htmlspecialchars( $input[ 'amount' ] )
-                ] );
-                $pdo->commit();
-
-                echo json_encode( [ 'message' => 'Bill updated successfully' ] );
-            } catch ( \Exception $e ) {
-                $pdo->rollBack();
-                echo json_encode( [ 'message' => 'An error occured', $e ] );
-
-            }
+                SET 
+                amount = :amount
+                WHERE id = :id"
+            );
+            $query->execute([
+                'id' => $_GET['id'],
+                'amount' => htmlspecialchars( $input['amount'] )
+            ]);
+            $pdo->commit();
+            echo json_encode([ 'message' => 'Bill updated successfully' ]);
+        } catch ( \Exception $e ) {
+            $pdo->rollBack();
+            echo json_encode([ 'message' => 'An error occurred', 'error' => $e->getMessage() ]);
         }
-
+    } else {
+        echo json_encode([ 'message' => 'Invalid or missing id' ]);
+        die();
     }
+}
 
     function handleDelete( $pdo ) {
         if ( isset( $_GET['id'] ) ) {            
@@ -124,5 +136,6 @@ function handlePut( $pdo, $input ) {
 
         }
     }
-    ?>
+
+?>
 

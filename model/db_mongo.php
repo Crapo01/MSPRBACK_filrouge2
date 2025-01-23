@@ -1,6 +1,6 @@
 <?php
 // Autoload de Composer
-require '../vendor/autoload.php'; 
+require 'vendor/autoload.php'; 
 
 class MongoDatabase {
     private $host;  
