@@ -1,6 +1,6 @@
 # MSPRBACK_filrouge2
 
-## setup XAMP virtualhost
+## setup XAMPP virtualhost
 
 In XAMPP installation directory (typically, C:\xampp) open the httpd-vhosts.conf file in the apache\conf\extra\  
 Replace the contents of this file with the following directives:
@@ -10,17 +10,17 @@ Replace the contents of this file with the following directives:
         ServerName localhost
     </VirtualHost>
     <VirtualHost *:80>
-        DocumentRoot "C:/xampp/wordpress/htdocs/app1"
+        DocumentRoot "C:/xampp/htdocs/app1"
         ServerName app1
     </VirtualHost>
 
-restart XAMP apache
+restart XAMPP apache
 
 At this point, your virtual host is configured. However, if you try browsing to the wordpress.localhost domain, your browser will show a failure notice, since this domain does not exist in reality. To resolve this, it is necessary to map the custom domain to the local IP address. To do this, open the file C:\windows\system32\drivers\etc\hosts and add the following line to it:
 
 MAKE A BACKUP COPY then edit as admin  
 
-    127.0.0.1           wordpress.localhost
+    127.0.0.1           app1
 
 go to http://app1/ to access index.php
 
@@ -81,22 +81,6 @@ extension=php_mongodb.dll
 
 Save and close the php.ini file.
 
-## connect to mongodb
-
-    <?php 
-
-    require 'vendor/autoload.php'; // Autoload Composer (si vous utilisez Composer)
-
-    use MongoDB\Client;
-
-    // Test MongoDB connection
-    try {
-        $client = new Client("mongodb://localhost:27017");
-        echo "MongoDB connection established!";
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
-    ?>
 
 ## Environment variables
 
@@ -113,6 +97,82 @@ create and update .htaccess file for environment variables:
     SetEnv MDB_USER mongodbUserName
     SetEnv MDB_PASSWORD mongodbPassword
     SetEnv MDB_DBNAME mongodbDbName
+
+# API DOCUMENTATION
+
+# Database Class Documentation
+
+## Overview
+The `Database` class provides methods for managing a MySQL database connection and creating tables (`customer`, `contract`, `billing`, and `vehicle`). It handles the connection to the database using PDO and provides functions to create the necessary tables with the required structure.
+
+## Methods
+
+### `__construct()`
+- **Description**: The constructor initializes the class, sets the database connection parameters (host, database name, username, and password) from environment variables, and establishes the connection to the database.
+- **Usage**:
+    ```php
+    $db = new Database();
+    ```
+
+### `connect()`
+- **Description**: Establishes a connection to the MySQL database using the provided credentials. If the connection fails, it throws a `PDOException` and displays an error message.
+- **Usage**: This method is automatically called when an instance of the `Database` class is created.
+
+### `getDbConnect()`
+- **Description**: Returns the PDO database connection object that can be used for further database queries.
+- **Return Type**: `PDO`
+- **Usage**:
+    ```php
+    $dbConnect = $db->getDbConnect();
+    ```
+
+### `createCustomerTable()`
+- **Description**: Creates the `customer` table in the database with the following columns:
+  - `id` (primary key, auto-increment)
+  - `first_name` (string)
+  - `second_name` (string)
+  - `address` (string)
+  - `permit_number` (string)
+- **Usage**:
+    ```php
+    $db->createCustomerTable();
+    ```
+
+### `createContractTable()`
+- **Description**: Creates the `contract` table in the database with the following columns:
+  - `id` (primary key, auto-increment)
+  - `vehicle_id` (foreign key referencing `vehicle(id)`)
+  - `customer_id` (foreign key referencing `customer(id)`)
+  - `sign_datetime` (datetime)
+  - `loc_begin_datetime` (datetime)
+  - `loc_end_datetime` (datetime)
+  - `returning_datetime` (datetime)
+  - `price` (float)
+- **Usage**:
+    ```php
+    $db->createContractTable();
+    ```
+
+### `createBillingTable()`
+- **Description**: Creates the `billing` table in the database with the following columns:
+  - `ID` (primary key, auto-increment)
+  - `Contract_id` (foreign key referencing `contract(id)`)
+  - `Amount` (float)
+- **Usage**:
+    ```php
+    $db->createBillingTable();
+    ```
+
+### `createVehicleTable()`
+- **Description**: Creates the `vehicle` table in the database with the following columns:
+  - `id` (primary key, auto-increment)
+  - `licence_plate` (string, required)
+  - `informations` (text)
+  - `km` (integer, required)
+- **Usage**:
+    ```php
+    $db->createVehicleTable();
+    ```
 
 
 

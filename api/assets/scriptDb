@@ -1,0 +1,31 @@
+CREATE TABLE Customer (
+    id INT AUTO_INCREMENT PRIMARY KEY,  
+    first_name CHAR(255),               
+    second_name CHAR(255),              
+    address CHAR(255),                  
+    permit_number CHAR(255)             
+);
+CREATE TABLE Vehicle (
+    id INT AUTO_INCREMENT PRIMARY KEY,      
+    licence_plate CHAR(255) NOT NULL,       
+    informations TEXT,                      
+    km INT NOT NULL                         
+);
+CREATE TABLE Contract (
+    id INT AUTO_INCREMENT PRIMARY KEY,               
+    vehicle_id int NOT NULL,                    
+    customer_id int NOT NULL,                   
+    sign_datetime DATETIME NOT NULL,                  
+    loc_begin_datetime DATETIME NOT NULL,             
+    loc_end_datetime DATETIME NOT NULL,               
+    returning_datetime DATETIME,                      
+    price FLOAT NOT NULL,                             
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicle(id), 
+    FOREIGN KEY (customer_id) REFERENCES Customer(id) 
+);
+CREATE TABLE Billing (
+    ID INT AUTO_INCREMENT PRIMARY KEY,           
+    Contract_id INT NOT NULL,                     
+    Amount FLOAT NOT NULL,                        
+    FOREIGN KEY (Contract_id) REFERENCES Contract(id)  
+);
