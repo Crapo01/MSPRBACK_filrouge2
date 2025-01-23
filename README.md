@@ -173,6 +173,8 @@ The `Database` class provides methods for managing a MySQL database connection a
     ```php
     $db->createVehicleTable();
     ```
+# Manager Class Documentation
+
 
 
 
