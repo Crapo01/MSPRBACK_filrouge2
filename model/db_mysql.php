@@ -37,7 +37,8 @@ class Database {
     }
 
     public function createCustomerTable() {
-        $query = "
+        try {
+            $query = "
         CREATE TABLE IF NOT EXISTS customer (
             id INT AUTO_INCREMENT PRIMARY KEY,  
             first_name CHAR(255),               
@@ -45,10 +46,15 @@ class Database {
             address CHAR(255),                  
             permit_number CHAR(255) 
         )";
-        $this->dbConnect->exec( $query );
+        $this->dbConnect->exec( $query );        
+        } catch ( PDOException $e ) {
+        die( 'Erreur : ' . $e->getMessage() );
+    }
+
     }
 
     public function createContractTable() {
+        try{
         $query = "
         CREATE TABLE IF NOT EXISTS contract (
             id INT AUTO_INCREMENT PRIMARY KEY,               
@@ -63,9 +69,13 @@ class Database {
             FOREIGN KEY (customer_id) REFERENCES Customer(id)
         )";
         $this->dbConnect->exec( $query );
+        } catch ( PDOException $e ) {
+        die( 'Erreur : ' . $e->getMessage() );
+    }
     }
 
     public function createBillingTable() {
+        try{
         $query = "
         CREATE TABLE IF NOT EXISTS billing (
             ID INT AUTO_INCREMENT PRIMARY KEY,           
@@ -74,9 +84,13 @@ class Database {
             FOREIGN KEY (Contract_id) REFERENCES Contract(id) 
         )";
         $this->dbConnect->exec( $query );
+        } catch ( PDOException $e ) {
+        die( 'Erreur : ' . $e->getMessage() );
+    }
     }
 
     public function createVehicleTable() {
+        try{
         $query = "
         CREATE TABLE IF NOT EXISTS vehicle (
             id INT AUTO_INCREMENT PRIMARY KEY,      
@@ -85,6 +99,9 @@ class Database {
             km INT NOT NULL   
         )";
         $this->dbConnect->exec( $query );
+        } catch ( PDOException $e ) {
+        die( 'Erreur : ' . $e->getMessage() );
+    }
     }
 }
 
